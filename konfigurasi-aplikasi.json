@@ -1,0 +1,21 @@
+{
+  "short_name": "Jadwal Dimas Ganteng",
+  "name": "Jadwal Rutinitas Harian Dimas",
+  "icons": [
+    {
+      "src": "ikon1.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "ikon2.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "display": "standalone",
+  "orientation": "portrait"
+}
