@@ -129,47 +129,66 @@
                 .then(() => console.log('Sistem Aplikasi Siap'))
                 .catch(err => console.log('Gagal Memuat Sistem:', err));
         }
+        // --- FUNGSI BUNYI BEEP LEBIH BESAR & NYARING ---
+function playLuxuryBeep() {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    
+    const audioCtx = new AudioContext();
+    const now = audioCtx.currentTime;
 
-        // --- FUNGSI BUNYI BEEP MEWAH (Web Audio API) ---
-        function playLuxuryBeep() {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContext) return;
-            
-            const audioCtx = new AudioContext();
-            const now = audioCtx.currentTime;
+    // Master Gain untuk mengontrol volume keseluruhan tanpa distorsi
+    const masterGain = audioCtx.createGain();
+    masterGain.gain.setValueAtTime(0.5, now); // Volume ditingkatkan
+    masterGain.connect(audioCtx.destination);
 
-            // Nada Utama (Jernih & Elegan)
-            const osc1 = audioCtx.createOscillator();
-            const gain1 = audioCtx.createGain();
-            osc1.type = 'sine';
-            osc1.frequency.setValueAtTime(880, now);
-            osc1.frequency.exponentialRampToValueAtTime(1760, now + 0.12);
-            
-            gain1.gain.setValueAtTime(0.15, now);
-            gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-            
-            osc1.connect(gain1);
-            gain1.connect(audioCtx.destination);
+    // 1. Nada Utama (Punchy & Nyaring)
+    const osc1 = audioCtx.createOscillator();
+    const gain1 = audioCtx.createGain();
+    osc1.type = 'triangle'; // Suara lebih padat dibanding sine
+    osc1.frequency.setValueAtTime(523.25, now); // Tone C5 (mantap)
+    osc1.frequency.exponentialRampToValueAtTime(1046.50, now + 0.15); // Naik ke C6
+    
+    gain1.gain.setValueAtTime(0.6, now);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
 
-            // Harmoni Tambahan (Kesan Premium / Shimmer)
-            const osc2 = audioCtx.createOscillator();
-            const gain2 = audioCtx.createGain();
-            osc2.type = 'triangle';
-            osc2.frequency.setValueAtTime(1320, now + 0.02);
-            
-            gain2.gain.setValueAtTime(0.08, now + 0.02);
-            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+    // 2. Body / Bass Tambahan (Memberikan efek suara 'Besar' & Berisi)
+    const osc2 = audioCtx.createOscillator();
+    const gain2 = audioCtx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(261.63, now); // Tone C4 (Sub-body)
+    
+    gain2.gain.setValueAtTime(0.4, now);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
 
-            osc2.connect(gain2);
-            gain2.connect(audioCtx.destination);
+    // 3. Aksek / Chime Tinggi (Penjelas/Penajam Suara)
+    const osc3 = audioCtx.createOscillator();
+    const gain3 = audioCtx.createGain();
+    osc3.type = 'square'; // Tajam & terdengar jelas
+    osc3.frequency.setValueAtTime(2093.00, now + 0.03); // Tone C7
+    
+    gain3.gain.setValueAtTime(0.15, now + 0.03);
+    gain3.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
 
-            // Eksekusi Pemutaran Suara
-            osc1.start(now);
-            osc1.stop(now + 0.12);
-            osc2.start(now + 0.02);
-            osc2.stop(now + 0.15);
-        }
+    // Menghubungkan semua komponen ke Master
+    osc1.connect(gain1);
+    osc2.connect(gain2);
+    osc3.connect(gain3);
+    
+    gain1.connect(masterGain);
+    gain2.connect(masterGain);
+    gain3.connect(masterGain);
 
+    // Jalankan Suara
+    osc1.start(now);
+    osc1.stop(now + 0.2);
+    
+    osc2.start(now);
+    osc2.stop(now + 0.25);
+    
+    osc3.start(now + 0.03);
+    osc3.stop(now + 0.18);
+}
         const masterSchedule = {
             senin: [
                 { time: '04:30 - 05:00', title: 'Bangun Pagi', icon: 'sun', cat: 'Rutinitas' },
